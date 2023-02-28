@@ -1,6 +1,8 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { initObject } from "../initVar";
+import { useNavigate } from "react-router-dom";
+import Loading from "./loading/Loading";
 import logo from "../assets/logo.png";
 import axios from "axios";
 import "./Login.css";
@@ -10,12 +12,10 @@ function Login() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loadingAnimation, setLoadingAnimation] = useState(false);
+  let navigate = useNavigate();
 
-  useEffect(() => {
-    // action on update of movies
-  }, [signUp, userName, email, password]);
-
-  const handleRegistration = async (event) => {
+  const handleRegistration = (event) => {
     event.preventDefault();
     const headers = {
       "Content-Type": "application/json",
@@ -25,17 +25,19 @@ function Login() {
       email,
       password,
     };
-    await axios
+    axios
       .post(`${initObject.url}/register`, body, { headers: headers })
       .then((res) => {
         console.log(res);
+        navigate("passphrase");
       })
       .catch((err) => {
         console.error(err);
       });
   };
-  const handleSignIn = async (event) => {
+  const handleSignIn = (event) => {
     event.preventDefault();
+    setLoadingAnimation(true);
     const headers = {
       "Content-Type": "application/json",
     };
@@ -43,10 +45,12 @@ function Login() {
       email,
       password,
     };
-    await axios
+    axios
       .post(`${initObject.url}/signup`, body, { headers: headers })
       .then((res) => {
-        console.log(res);
+        localStorage.setItem("token", res.data.token);
+        setLoadingAnimation(false);
+        navigate("dashboard");
       })
       .catch((err) => {
         console.error(err);
@@ -54,6 +58,7 @@ function Login() {
   };
   return (
     <div className="login-page">
+      {loadingAnimation && <Loading />}
       <div className="logo">
         <img src={logo} alt="Logo" />
       </div>
