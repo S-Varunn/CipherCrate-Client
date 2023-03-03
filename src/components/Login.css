@@ -7,6 +7,10 @@ body {
   .pointer{
     cursor: pointer;
   }
+  .login-container{
+    display: flex;
+    justify-content: center;
+  }
   
   .login-page {
     width: 360px;
@@ -15,6 +19,10 @@ body {
     background-color: transparent;
     border-radius: 10px;
     
+  }
+  .options{
+    display: flex;
+    justify-content: center;
   }
   
   .logo {
@@ -79,6 +87,8 @@ body {
 .link {
     color: #2196F3;
     cursor: pointer;
+    margin-top: 15px;
+    margin-left: 5px;
 }
   
   .form h2 {

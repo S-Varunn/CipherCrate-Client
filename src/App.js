@@ -1,11 +1,17 @@
 import "./App.css";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
-import Passphrase from "./components/passphrase/passphrase";
-import Loading from "./components/loading/Loading";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { AuthContext } from "./context/AuthContext";
+import { useState, useMemo } from "react";
 
 function App() {
+  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
+  const providerToken = useMemo(
+    () => ({ token, setToken, user, setUser }),
+    [token, setToken, user, setUser]
+  );
   const router = createBrowserRouter([
     {
       path: "/",
@@ -15,14 +21,12 @@ function App() {
       path: "/dashboard",
       element: <Dashboard />,
     },
-    {
-      path: "/passphrase",
-      element: <Passphrase />,
-    },
   ]);
   return (
     <div>
-      <RouterProvider router={router} />
+      <AuthContext.Provider value={providerToken}>
+        <RouterProvider router={router} />
+      </AuthContext.Provider>
     </div>
   );
 }
