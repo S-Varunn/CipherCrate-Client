@@ -5,14 +5,31 @@ import { useNavigate } from "react-router-dom";
 import { initObject } from "../initVar";
 import Navbar from "./navbar/Navbar";
 import { AuthContext } from "../context/AuthContext";
+import { aesCbc256 } from "./passphrase/Masking";
 
 function Dashboard() {
   const { token, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [file, setFile] = useState("");
+  const [fileList, setFileList] = useState("");
 
   useEffect(() => {
-    console.log(token, user);
+    // console.log(token, user);
+    // if (user && token)
+    //   axios
+    //     .get(
+    //       `${initObject.url}/filelist`,
+    //       { email: aesCbc256(user.email) },
+    //       {
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     )
+    //     .then((res) => {
+    //       setFileList(res.data.fileList);
+    //       console.log(res.data.fileList);
+    //     });
     if (!user && !token) {
       console.log(
         "Todo: On first login or register the state is set but time lag makes this useEffect redirect back to login"
@@ -21,7 +38,7 @@ function Dashboard() {
         "for now redirecting back to login but in future show a notification and make the redirect"
       );
 
-      navigate("/");
+      // navigate("/");
     }
   }, [token, user, navigate]);
 
@@ -36,37 +53,59 @@ function Dashboard() {
       return;
     }
 
-    const data = new FormData();
-    data.append("file", file);
-
-    const headers = {
-      "content-type": file.type,
-      "content-length": `${file.size}`, // 👈 Headers need to be a string
+    const metadata = {
+      name: file.name,
+      type: file.type,
+      user,
     };
+    console.log(file);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("metadata", JSON.stringify(metadata));
+    const response = axios.post(`${initObject.url}/upload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-    axios
-      .post(`${initObject.url}/upload`, data, { headers: headers })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    console.log(response.data);
   };
 
   return (
     <div className="dashboard-container">
       <Navbar />
-      <div className="upload-file">
-        <div>
-          <input type="file" onChange={handleFileChange} />
+      <div>
+        <div className="show-uploaded-files">
+          <ul>
+            <li>
+              Fugiat non ex voluptate fugiat excepteur reprehenderit ad
+              consequat do consequat voluptate quis.
+            </li>
+            <li>
+              Fugiat non ex voluptate fugiat excepteur reprehenderit ad
+              consequat do consequat voluptate quis.
+            </li>
+            <li>
+              Fugiat non ex voluptate fugiat excepteur reprehenderit ad
+              consequat do consequat voluptate quis.
+            </li>
+            <li>
+              Fugiat non ex voluptate fugiat excepteur reprehenderit ad
+              consequat do consequat voluptate quis.
+            </li>
+          </ul>
+        </div>
 
-          <div>{file && `${file.name} - ${file.type}`}</div>
+        <div className="upload-file">
+          <div>
+            <input type="file" onChange={handleFileChange} />
 
-          <button onClick={handleUploadClick}>Upload</button>
+            <div>{file && `${file.name} - ${file.type}`}</div>
+
+            <button onClick={handleUploadClick}>Upload</button>
+          </div>
         </div>
       </div>
-      <div className="show-uploaded-files"></div>
     </div>
   );
 }
