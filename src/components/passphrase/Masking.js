@@ -3,7 +3,8 @@ import { cipher } from "../../initVar";
 
 export function aesCbc256(message) {
   const data = message;
-  const iv = cipher.iv;
+  const iv = CryptoJS.lib.WordArray.random(8).toString(CryptoJS.enc.Hex);
+  console.log(iv);
   const key = cipher.key;
 
   const fkey = CryptoJS.enc.Utf8.parse(key);
@@ -14,6 +15,16 @@ export function aesCbc256(message) {
     mode: CryptoJS.mode.CBC,
     padding: CryptoJS.pad.Pkcs7,
   });
+  return hideIV(iv, enc.ciphertext.toString(CryptoJS.enc.Base64));
+  // return enc.ciphertext.toString(CryptoJS.enc.Base64);
+}
 
-  return enc.ciphertext.toString(CryptoJS.enc.Base64);
+function hideIV(iv, cipherText) {
+  let ivArr = iv.split("");
+  let cipherTextArr = cipherText.split("");
+  for (let i = 0; i < ivArr.length; i++) {
+    cipherTextArr.splice(i + 1, 0, ivArr[i]);
+  }
+  console.log(cipherTextArr.join(""));
+  return cipherTextArr.join("");
 }

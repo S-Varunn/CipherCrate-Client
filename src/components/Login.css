@@ -1,10 +1,4 @@
-body {
-    background-color: transparent;
-    background-image: url("https://cdn.pixabay.com/photo/2016/06/02/02/33/triangles-1430105_960_720.png");
-     background-size: cover;
-  }
-
-  .pointer{
+.pointer{
     cursor: pointer;
   }
   .login-container{

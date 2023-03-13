@@ -3,7 +3,7 @@ import { useState } from "react";
 import { initObject } from "../initVar";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import Loading from "./loading/Loading";
+import Loading from "./helpers/Loading";
 import logo from "../assets/logo.png";
 import axios from "axios";
 import { aesCbc256 } from "./passphrase/Masking";
@@ -48,6 +48,9 @@ function Login() {
       .post(`${initObject.url}/register`, body, { headers: headers })
       .then((res) => {
         console.log(res);
+        localStorage.setItem("userName", userName);
+        localStorage.setItem("email", email);
+        localStorage.setItem("token", res.data.token);
         setUser({ userName, email });
         setToken(res.data.token);
 
@@ -75,6 +78,9 @@ function Login() {
       .then((res) => {
         setUser({ email, userName: res.data.userName });
         setToken(res.data.token);
+        localStorage.setItem("userName", res.data.userName);
+        localStorage.setItem("email", email);
+        localStorage.setItem("token", res.data.token);
         setLoadingAnimation(false);
         if (res.data.status === "ok") navigate("dashboard");
       })
@@ -136,8 +142,7 @@ function Login() {
                     setEmail("");
                     setPassword("");
                     setUserName("");
-                  }}
-                >
+                  }}>
                   Create an account
                 </p>
               </div>
@@ -178,8 +183,7 @@ function Login() {
                   onClick={(event) => {
                     event.preventDefault();
                     setModal(true);
-                  }}
-                >
+                  }}>
                   Register
                 </button>
               </form>
@@ -192,8 +196,7 @@ function Login() {
                     setEmail("");
                     setPassword("");
                     setUserName("");
-                  }}
-                >
+                  }}>
                   Sign In
                 </p>
               </div>
