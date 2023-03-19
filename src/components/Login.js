@@ -97,6 +97,7 @@ function Login() {
       email,
       password: encodedPassword,
     };
+
     axios
       .post(`${initObject.url}/signup`, body, { headers: headers })
       .then((res) => {
@@ -120,6 +121,8 @@ function Login() {
   };
   return (
     <div className="login-container">
+      <div className={modal ? "blur" : ""}></div>
+
       {modal && (
         <Passphrase
           value={passphrase}
@@ -134,7 +137,7 @@ function Login() {
           <div className="form">
             <div className="logo">
               <img src={logo} alt="Logo" />
-              <h2>Login</h2>
+              {signUp ? <h2>Login</h2> : <h2>Register</h2>}
             </div>
             {signUp ? (
               <div>
