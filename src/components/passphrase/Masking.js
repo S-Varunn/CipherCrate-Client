@@ -19,6 +19,8 @@ export function aesCbc256(message) {
   // return enc.ciphertext.toString(CryptoJS.enc.Base64);
 }
 
+function deCipher(message) {}
+
 function hideIV(iv, cipherText) {
   let ivArr = iv.split("");
   let cipherTextArr = cipherText.split("");

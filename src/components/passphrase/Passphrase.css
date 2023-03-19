@@ -2,7 +2,89 @@
     position: absolute;
     height: 40vh;
     width: 70vw;
-    background-color: aliceblue;
+    background-color: #1d2b3a;
     z-index: 2;
     margin-top: 185px;
+    display: flex;
+}
+.passphrase-info {
+    padding: 10px;
+    background-color: #212020;
+}
+.passphrase-buttons {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    justify-content: center;
+}
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    height: 20px;
+    width: 20px;
+    color: white;
+    transition: all 0.3s ease-in-out;
+
+}
+.modal-close :hover {
+    transform: scale(1.1); 
+}
+.cross-button {
+    height: 20px;
+    width: 20px;
+}
+.submit-button {
+    height: 30px;
+    margin: 15px;
+    background-color: #222222;
+    color: white;
+    font-family: 'Lato', sans-serif;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.passphrase-container p{
+    color: white;
+    font-family: 'Edu NSW ACT Foundation', cursive;
+}
+.passphrase-container h3 {
+    color: white;
+    font-family: 'Lato', sans-serif;
+}
+
+.input-box{
+    position: relative;
+    width: 250px;
+    
+}
+.input-box input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: #1d2b3a;
+    border-radius: 5px;
+    outline: none;
+    color: white;
+    font-size: 1em;
+    transition: 0.5s;
+}
+.input-box span {
+    position: absolute;
+    left: 0;
+    padding: 10px;
+    pointer-events: none;
+    font-size: 1em;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase;
+    transition: 0.5s;
+
+}
+.input-box input:valid ~ span,
+.input-box input:focus ~ span {
+    color: #00dfc4;
+    transform: translateX(10px) translateY(-7px);
+    font-size: 0.50em;
+    padding: 5px;
+    background: #1d2b3a;
+    letter-spacing: 0.2em;
 }

@@ -19,28 +19,28 @@ function Navbar() {
     navigate("/");
   };
   return (
-    <section class="navigation">
-      <div class="nav-container">
-        <div class="nav-logo-container">
-          <div className="flex">
+    <section className="navigation">
+      <div className="nav-container">
+        <div className="nav-logo-container">
+          <div className="nav-logo-info flex">
             <img className="nav-logo" src={logo} alt="Logo" />
             <p className="ml-10 fs-xl">Cipher Crate</p>
           </div>
         </div>
         <div className={showMenu ? "nav-menu mobile-menu-link" : "nav-menu"}>
           <ul>
-            <li>
+            <li key="home">
               <a href="#!">Home</a>
             </li>
-            <li>
+            <li key="about">
               <a href="#!">About</a>
             </li>
 
-            <li>
+            <li key="portfolio">
               <a href="#!">Portfolio</a>
             </li>
 
-            <li>
+            <li key="contact">
               <a href="#!">Contact</a>
             </li>
           </ul>

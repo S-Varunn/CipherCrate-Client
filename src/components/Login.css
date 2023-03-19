@@ -4,6 +4,7 @@
   .login-container{
     display: flex;
     justify-content: center;
+    margin: 10px;
   }
   .info-container {
     background-color: rgb(255 255 255);
@@ -50,12 +51,18 @@
     display: flex;
     margin: 5% 0px 0px 0px;
   }
+  .blur{
+    position: absolute;
+    height: 98%;
+    width: 100%;
+    z-index: 2;
+    backdrop-filter: blur(8px);
+  }
   
   .form {
     position: relative;
-    z-index: 1;
     max-width: 360px;
-    padding: 40px;
+    padding: 40px 30px 40px 30px;
     text-align: center;
     background-color: rgb(255 255 255);
     border-right: 2px solid #f1f1f1;
@@ -131,3 +138,8 @@
     text-decoration: underline;
   }
   
+@media (max-width: 778px) {
+  .info-container {
+    display: none;
+  }
+}

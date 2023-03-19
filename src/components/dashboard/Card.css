@@ -1,0 +1,34 @@
+.file-card-container{
+    display: flex;
+    height: 100px;
+    width: 300px;
+    background-color: #272727;
+    border-radius: 10px;
+    margin: 10px;
+    border-left: 4px solid rgba(47, 201, 226, 1);
+}
+.file-list-container{
+    padding: 10px;
+}
+.info-element{
+    display: flex;
+    padding: 1px;
+    color: white;
+}
+.file-info{
+    padding: 5px;
+}
+.file-attrib{
+    font-family: 'Oswald', sans-serif;
+    font-size: small;
+}
+.file-value{
+    font-family: 'Lato', sans-serif;
+    justify-content: center;
+    font-family: 'Lato', sans-serif;
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    font-size: small;
+
+}
