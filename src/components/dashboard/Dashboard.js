@@ -1,36 +1,35 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { initObject } from "../initVar";
-import Navbar from "./navbar/Navbar";
-import { AuthContext } from "../context/AuthContext";
-import { aesCbc256 } from "./passphrase/Masking";
+import { initObject } from "../../initVar";
+import Navbar from "../navbar/Navbar";
+import { ChangeBackground } from "../helpers/ChangeBackground";
 
 function Dashboard() {
-  const { token, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [file, setFile] = useState("");
   const [fileList, setFileList] = useState("");
 
   useEffect(() => {
-    // console.log(token, user);
-    // if (user && token)
-    //   axios
-    //     .get(
-    //       `${initObject.url}/filelist`,
-    //       { email: aesCbc256(user.email) },
-    //       {
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //       }
-    //     )
-    //     .then((res) => {
-    //       setFileList(res.data.fileList);
-    //       console.log(res.data.fileList);
-    //     });
-    if (!user && !token) {
+    ChangeBackground("login");
+    let email = localStorage.getItem("email");
+    if (localStorage.getItem("userName") && localStorage.getItem("token"))
+      axios
+        .get(
+          `${initObject.url}/filelist`,
+          { email },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          setFileList(res.data.fileList);
+          console.log(res.data.fileList);
+        });
+    if (!localStorage.getItem("userName") && !localStorage.getItem("token")) {
       console.log(
         "Todo: On first login or register the state is set but time lag makes this useEffect redirect back to login"
       );
@@ -38,9 +37,9 @@ function Dashboard() {
         "for now redirecting back to login but in future show a notification and make the redirect"
       );
 
-      // navigate("/");
+      navigate("/");
     }
-  }, [token, user, navigate]);
+  }, [navigate]);
 
   const handleFileChange = (e) => {
     if (e.target.files) {
@@ -52,13 +51,14 @@ function Dashboard() {
     if (!file) {
       return;
     }
-
+    let email = localStorage.getItem("email");
+    let userName = localStorage.getItem("userName");
     const metadata = {
       name: file.name,
       type: file.type,
-      user,
+      user: { userName, email },
     };
-    console.log(file);
+    console.log(metadata);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("metadata", JSON.stringify(metadata));

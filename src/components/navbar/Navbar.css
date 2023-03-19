@@ -1,152 +1,160 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto');
-body{
-    margin: 0;
-     padding: 0;
-     font-family: 'Roboto', sans-serif;
+.nav-container {
+    width: 100%;
+    height: 5rem;
+    display: grid;
+    grid-template-columns: 2rem 2fr 1fr 3fr 1fr 2rem;
+    box-shadow: rgba(50,50,93,0.25) 0px 50px 100px -20px,rgba(0,0,0,0.3) 0px 30px 60px -30px;
+    background-color: #272727;
 }
- .navigation {
-     height: 55px;
-     background: linear-gradient(45deg, #000000, #dedede);
+.flex {
+    display: flex;
+    align-items: center;
 }
- .brand {
-     position: absolute;
-     padding-left: 20px;
-     float: left;
-     line-height: 55px;
-     text-transform: uppercase;
-     font-size: 1.4em;
+p {
+    color: white;
+    font-family: 'Lato', sans-serif;
 }
- .brand a, .brand a:visited {
-     color: #ffffff;
-     text-decoration: none;
+.fs-xl {
+    font-size: x-large;
 }
- .nav-container {
-     max-width: 1000px;
-     margin: 0 auto;
+ 
+.ml-10{
+    margin-left: 10px;
 }
- nav {
-     float: right;
+
+.nav-logo {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
 }
- nav ul {
-     list-style: none;
-     margin: 0;
-     padding: 0;
+.nav-logo-container {
+    grid-column: 2/3;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
 }
- nav ul li {
-     float: left;
-     position: relative;
+.ham-menu {
+    display: none;
 }
- nav ul li a,nav ul li a:visited {
-     display: block;
-     padding: 0 20px;
-     line-height: 55px;
-     color: #fff;
-     background: #262626 ;
-     text-decoration: none;
+.nav-menu {
+    grid-column: 4/5;
 }
- nav ul li a{
-     background: transparent;
-     color: #FFF;
+.nav-menu ul {
+    height: 5rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
 }
- nav ul li a:hover, nav ul li a:visited:hover {
-     background: #2581DC;
-     color: #ffffff;
+
+.nav-menu li a {
+    list-style: none;
+    text-decoration: none;
+    color: white;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
 }
- .navbar-dropdown li a{
-     background: #2581DC;
+.logout-button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
 }
- nav ul li a:not(:only-child):after, nav ul li a:visited:not(:only-child):after {
-     padding-left: 4px;
-     content: ' \025BE';
+.logout-div{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    
 }
- nav ul li ul li {
-     min-width: 190px;
+.logout-text {
+    font-family: 'Lato', sans-serif;
+    margin-right: 20px;
+    margin-top: -3px;
+    font-weight: 100;
+
 }
- nav ul li ul li a {
-     padding: 15px;
-     line-height: 20px;
-}
- .navbar-dropdown {
-     position: absolute;
-     display: none;
-     z-index: 1;
-     background: #fff;
-     box-shadow: 0 0 35px 0 rgba(0,0,0,0.25);
-}
-/* Mobile navigation */
- .nav-mobile {
-     display: none;
-     position: absolute;
-     top: 0;
-     right: 0;
-     background: transparent;
-     height: 55px;
-     width: 70px;
-}
- @media only screen and (max-width: 800px) {
-     .nav-mobile {
-         display: block;
+
+@media (max-width: 1080px) {
+    .nav-container{
+        height: 3rem;
+        grid-template-columns: 2rem 1fr 1fr 3fr 1fr 2rem;
     }
-     nav {
-         width: 100%;
-         padding: 55px 0 15px;
+    .nav-logo,
+    .nav-menu ul {
+        height: 3rem;
     }
-     nav ul {
-         display: none;
+    .nav-logo{
+        height: 40px;
+        width: 40px;
     }
-     nav ul li {
-         float: none;
-    }
-     nav ul li a {
-         padding: 15px;
-         line-height: 20px;
-         background: #262626;
-    }
-     nav ul li ul li a {
-         padding-left: 30px;
-    }
-     .navbar-dropdown {
-         position: static;
-}
- @media screen and (min-width:800px) {
-     .nav-list {
-         display: block !important;
+    .nav-menu li a {
+        
+        font-family: 'Lato', sans-serif;
+        font-weight: 500;
+        font-size:medium;
     }
 }
- #navbar-toggle {
-     position: absolute;
-     left: 18px;
-     top: 15px;
-     cursor: pointer;
-     padding: 10px 35px 16px 0px;
+@media (max-width:778px){
+    .nav-container{
+        height: 5rem;
+        grid-template-columns: 1rem 1fr 3fr 1fr 1rem;
+    }
+    .nav-menu {
+        display: none;
+    }
+    .ham-menu {
+        display: block;
+        font-size: 2rem;
+        grid-column: 4/5;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: white;
+    }
+    .logout-button-container {
+        display: none;
+    }
+    .nav-logo,
+    .nav-menu ul {
+        height: 5rem;
+    }
+    .nav-logo {
+        height: 50px;
+        width: 50px;
+
+    }
+    .mobile-menu-link {
+        grid-column: 2/5;
+        position: relative;
+        z-index: 99;
+      }
+    
+      .mobile-menu-link {
+        position: absolute;
+        top: 5rem;
+        width: 100%;
+        background-color: #272727;
+        display: grid;
+        grid-column: 3/4;
+        align-items: center;
+        padding-left: 3rem;
+        transition: all 2s linear;
+        transform-origin: top;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+      }
+    
+      .mobile-menu-link ul {
+        height: 20rem;
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+        align-items: start;
+      }
+      .mobile-menu-link li {
+        color: #272727;
+      }
+    
+      .mobile-menu-link ul li:first-child {
+        transition-delay: 0.2s;
+      }
 }
- #navbar-toggle span, #navbar-toggle span:before, #navbar-toggle span:after {
-     cursor: pointer;
-     border-radius: 1px;
-     height: 3px;
-     width: 30px;
-     background: #ffffff;
-     position: absolute;
-     display: block;
-     content: '';
-     transition: all 300ms ease-in-out;
-}
- #navbar-toggle span:before {
-     top: -10px;
-}
- #navbar-toggle span:after {
-     bottom: -10px;
-}
- #navbar-toggle.active span {
-     background-color: transparent;
-}
- #navbar-toggle.active span:before, #navbar-toggle.active span:after {
-     top: 0;
-}
- #navbar-toggle.active span:before {
-     transform: rotate(45deg);
-}
- #navbar-toggle.active span:after {
-     transform: rotate(-45deg);
-}
- }

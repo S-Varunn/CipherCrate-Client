@@ -1,6 +1,6 @@
 import "./App.css";
 import Login from "./components/Login";
-import Dashboard from "./components/Dashboard";
+import Dashboard from "./components/dashboard/Dashboard";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { AuthContext } from "./context/AuthContext";
 import { useState, useMemo } from "react";
