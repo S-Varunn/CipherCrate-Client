@@ -1,11 +1,24 @@
+.modal-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    z-index: 2;
+    inset: 0;
+}
 .passphrase-container{
     position: absolute;
     height: 40vh;
     width: 70vw;
     background-color: #1d2b3a;
     z-index: 2;
-    margin-top: 185px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    
 }
 .passphrase-info {
     padding: 10px;
@@ -51,12 +64,16 @@
     color: white;
     font-family: 'Lato', sans-serif;
 }
+.show{
+    display: flex;
+   }
+   .hide {
+    display: none;
+   }
 
 .input-box{
     position: relative;
-    width: 250px;
-    
-}
+    }
 .input-box input {
     width: 100%;
     padding: 10px;
