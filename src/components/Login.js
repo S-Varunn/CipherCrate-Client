@@ -17,19 +17,27 @@ import info_4 from "../assets/info_4.webp";
 import { ChangeBackground } from "./helpers/ChangeBackground";
 
 function Login() {
-  const { setToken, setUser } = useContext(AuthContext);
   const [signUp, setSignUp] = useState(true);
   const [modal, setModal] = useState(false);
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passphrase, setPassphrase] = useState("");
+  const [localPassphrase, setLocalPassphrase] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { setPassphrase } = useContext(AuthContext);
 
   const images = [info_1, info_2, info_3, info_4];
 
   const [loadingAnimation, setLoadingAnimation] = useState(false);
   let navigate = useNavigate();
+
+  useEffect(() => {
+    ChangeBackground("login");
+  }, []);
+
+  useEffect(() => {
+    console.log(modal);
+  }, [modal]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -41,30 +49,26 @@ function Login() {
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, [currentIndex]);
-  useEffect(() => {
-    ChangeBackground("login");
-  }, []);
+  }, [currentIndex, images.length]);
 
   const handleRegistration = (event) => {
     event.preventDefault();
-    if (passphrase === "") {
+    if (localPassphrase === "") {
       alert("Passphrase is required!");
       return;
     }
-    console.log("Confirm the passphrase later:", passphrase);
-
-    const encodedPassphrase = aesCbc256(passphrase);
+    console.log("Confirm the passphrase later:", localPassphrase);
+    const encodedUserName = aesCbc256(userName);
+    const encodedPassphrase = aesCbc256(localPassphrase);
     const encodedPassword = aesCbc256(password);
-
-    console.log("encrypted password: ", encodedPassphrase); // result is 9EF/QLpR+o/KrVueiI4L0g==
+    const encodedEmail = aesCbc256(email);
 
     const headers = {
       "Content-Type": "application/json",
     };
     const body = {
-      userName,
-      email,
+      userName: encodedUserName,
+      email: encodedEmail,
       password: encodedPassword,
       passphrase: encodedPassphrase,
     };
@@ -75,9 +79,7 @@ function Login() {
         localStorage.setItem("userName", userName);
         localStorage.setItem("email", email);
         localStorage.setItem("token", res.data.token);
-        setUser({ userName, email });
-        setToken(res.data.token);
-
+        setPassphrase(localPassphrase);
         navigate("/dashboard");
       })
       .catch((err) => {
@@ -91,18 +93,17 @@ function Login() {
       "Content-Type": "application/json",
     };
 
+    const encodedEmail = aesCbc256(email);
     const encodedPassword = aesCbc256(password);
 
     const body = {
-      email,
+      email: encodedEmail,
       password: encodedPassword,
     };
 
     axios
       .post(`${initObject.url}/signup`, body, { headers: headers })
       .then((res) => {
-        setUser({ email, userName: res.data.userName });
-        setToken(res.data.token);
         localStorage.setItem("userName", res.data.userName);
         localStorage.setItem("email", email);
         localStorage.setItem("token", res.data.token);
@@ -114,23 +115,26 @@ function Login() {
       });
   };
   const handlePassphraseChange = (newValue) => {
-    setPassphrase(newValue);
+    setLocalPassphrase(newValue);
   };
   const handleModalClose = () => {
     setModal(false);
   };
+
   return (
     <div className="login-container">
-      <div className={modal ? "blur" : ""}></div>
+      <Passphrase
+        value={localPassphrase}
+        onPassphraseChange={handlePassphraseChange}
+        onSubmit={handleRegistration}
+        onModalClose={handleModalClose}
+        modal={modal}
+        heading="Decide your passphrase!"
+        message="You can only enter the Passphrase once, so decide it carefully and
+          note it down somewhere. The Passphrase cannot be changed nor modified.
+          (32 character long)"
+      />
 
-      {modal && (
-        <Passphrase
-          value={passphrase}
-          onPassphraseChange={handlePassphraseChange}
-          onSubmit={handleRegistration}
-          onModalClose={handleModalClose}
-        />
-      )}
       <div className="page-elements">
         <div className="login-page">
           {loadingAnimation && <Loading />}
@@ -234,8 +238,12 @@ function Login() {
             )}
           </div>
           <div className="info-container">
-            <div className="image-container">
-              <img className="image" src={images[currentIndex]} />
+            <div className="image-container trans">
+              <img
+                className="image trans"
+                src={images[currentIndex]}
+                alt="info"
+              />
             </div>
           </div>
         </div>

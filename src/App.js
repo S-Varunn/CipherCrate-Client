@@ -6,11 +6,11 @@ import { AuthContext } from "./context/AuthContext";
 import { useState, useMemo } from "react";
 
 function App() {
-  const [token, setToken] = useState(null);
-  const [user, setUser] = useState(null);
-  const providerToken = useMemo(
-    () => ({ token, setToken, user, setUser }),
-    [token, setToken, user, setUser]
+  const [loading, setLoading] = useState(null);
+  const [passphrase, setPassphrase] = useState("");
+  const providerContext = useMemo(
+    () => ({ passphrase, setPassphrase, loading, setLoading }),
+    [passphrase, setPassphrase, loading, setLoading]
   );
   const router = createBrowserRouter([
     {
@@ -24,7 +24,7 @@ function App() {
   ]);
   return (
     <div>
-      <AuthContext.Provider value={providerToken}>
+      <AuthContext.Provider value={providerContext}>
         <RouterProvider router={router} />
       </AuthContext.Provider>
     </div>

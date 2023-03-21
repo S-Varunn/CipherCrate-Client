@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
 import logo from "../../assets/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,13 +8,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./Navbar.css";
 
-function Navbar() {
-  const { setUser, setToken } = useContext(AuthContext);
+function Navbar({ setPassphrase }) {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
   const handleLogout = () => {
-    setUser(null);
-    setToken(null);
+    localStorage.clear();
+    setPassphrase(null);
     navigate("/");
   };
   return (

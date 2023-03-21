@@ -4,7 +4,6 @@
   .login-container{
     display: flex;
     justify-content: center;
-    margin: 10px;
   }
   .info-container {
     background-color: rgb(255 255 255);
@@ -51,13 +50,9 @@
     display: flex;
     margin: 5% 0px 0px 0px;
   }
-  .blur{
-    position: absolute;
-    height: 98%;
-    width: 100%;
-    z-index: 2;
-    backdrop-filter: blur(8px);
-  }
+.trans {
+  transition: all 2s ease;
+}
   
   .form {
     position: relative;
