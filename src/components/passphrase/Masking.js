@@ -5,7 +5,6 @@ import { stitch } from "../Helpers";
 export function aesCbc256(message) {
   const data = message;
   const iv = CryptoJS.lib.WordArray.random(8).toString(CryptoJS.enc.Hex);
-  console.log(iv);
   const key = cipher.key;
 
   const fkey = CryptoJS.enc.Utf8.parse(key);
@@ -16,11 +15,8 @@ export function aesCbc256(message) {
     mode: CryptoJS.mode.CBC,
     padding: CryptoJS.pad.Pkcs7,
   });
-  console.log("IV:", iv);
-  console.log("Message:", enc.ciphertext.toString(CryptoJS.enc.Base64));
 
   return stitch(enc.ciphertext.toString(CryptoJS.enc.Base64), iv);
-  // return enc.ciphertext.toString(CryptoJS.enc.Base64);
 }
 
 // function hideIV(iv, cipherText) {

@@ -20,16 +20,9 @@ function Dashboard() {
 
   useEffect(() => {
     ChangeBackground("login");
-    let email = aesCbc256(localStorage.getItem("email"));
-    console.log(email);
+  }, []);
 
-    // if (localStorage.getItem("userName") && localStorage.getItem("token")) {
-    //   console.log("In here");
-    //   axios.get(`${initObject.url}/filelist/${email}`).then((res) => {
-    //     setFileList(res.data);
-    //     console.log(res.data);
-    //   });
-    // }
+  useEffect(() => {
     let fileList = [
       {
         fileName: "records.pdf",
@@ -52,12 +45,12 @@ function Dashboard() {
     ];
     setFileList(fileList);
     if (!localStorage.getItem("userName") && !localStorage.getItem("token")) {
-      console.log(
-        "Todo: On first login or register the state is set but time lag makes this useEffect redirect back to login"
-      );
-      console.log(
-        "for now redirecting back to login but in future show a notification and make the redirect"
-      );
+      // console.log(
+      //   "Todo: On first login or register the state is set but time lag makes this useEffect redirect back to login"
+      // );
+      // console.log(
+      //   "for now redirecting back to login but in future show a notification and make the redirect"
+      // );
 
       navigate("/");
     }
@@ -73,15 +66,17 @@ function Dashboard() {
     if (!file) {
       return;
     }
-    let email = localStorage.getItem("email");
-    let userName = localStorage.getItem("userName");
+    let email = aesCbc256(localStorage.getItem("email"));
+    let userName = aesCbc256(localStorage.getItem("userName"));
     let token = localStorage.getItem("token");
     const metadata = {
-      name: file.name,
+      name: aesCbc256(file.name),
+      size: file.size,
       type: file.type,
       user: { userName, email },
-      token,
+      passphrase: aesCbc256(passphrase),
     };
+    console.log(metadata);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("metadata", JSON.stringify(metadata));
@@ -98,8 +93,11 @@ function Dashboard() {
   };
   const handleModalClose = () => {
     let email = localStorage.getItem("email");
-    // let userName = localStorage.getItem("userName");
-    let token = localStorage.getItem("token");
+
+    const headers = {
+      "Content-Type": "application/json",
+      "x-access-token": localStorage.getItem("token"),
+    };
 
     if (passphrase !== null && passphrase !== "") {
       axios
@@ -107,15 +105,27 @@ function Dashboard() {
           `${initObject.url}/checkPassphrase`,
           { email: aesCbc256(email), passphrase: aesCbc256(passphrase) },
           {
-            headers: {
-              "Content-Type": "application/json",
-              "x-access-token": token,
-            },
+            headers,
           }
         )
         .then((res) => {
           if (res.data.status === "ok") {
             alert("Good pp");
+            let email = aesCbc256(localStorage.getItem("email"));
+
+            axios
+              .post(
+                `${initObject.url}/filelist`,
+                {
+                  email,
+                  passphrase: aesCbc256(passphrase),
+                },
+                { headers }
+              )
+              .then((res) => {
+                // setFileList(res.data);
+                console.log(res.data);
+              });
             setModal(false);
           } else alert("Bad pp, try again");
         });
@@ -124,7 +134,7 @@ function Dashboard() {
     }
   };
 
-  console.log("Passphrase", passphrase);
+  // console.log("Passphrase", passphrase);
 
   return (
     <div className="dashboard-container">

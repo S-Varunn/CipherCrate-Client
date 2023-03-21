@@ -36,10 +36,6 @@ function Login() {
   }, []);
 
   useEffect(() => {
-    console.log(modal);
-  }, [modal]);
-
-  useEffect(() => {
     const intervalId = setInterval(() => {
       if (currentIndex === images.length - 1) {
         setCurrentIndex(0);
@@ -75,7 +71,7 @@ function Login() {
     axios
       .post(`${initObject.url}/register`, body, { headers: headers })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         localStorage.setItem("userName", userName);
         localStorage.setItem("email", email);
         localStorage.setItem("token", res.data.token);
@@ -173,8 +169,7 @@ function Login() {
                       setEmail("");
                       setPassword("");
                       setUserName("");
-                    }}
-                  >
+                    }}>
                     Create an account
                   </p>
                 </div>
@@ -215,8 +210,7 @@ function Login() {
                     onClick={(event) => {
                       event.preventDefault();
                       setModal(true);
-                    }}
-                  >
+                    }}>
                     Register
                   </button>
                 </form>
@@ -229,8 +223,7 @@ function Login() {
                       setEmail("");
                       setPassword("");
                       setUserName("");
-                    }}
-                  >
+                    }}>
                     Sign In
                   </p>
                 </div>
