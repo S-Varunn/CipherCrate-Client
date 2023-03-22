@@ -4,24 +4,43 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import toast from "react-hot-toast";
 import { initObject } from "../../initVar";
 import Navbar from "../navbar/Navbar";
 import Passphrase from "../passphrase/Passphrase";
 import Card from "./Card";
 import { ChangeBackground } from "../helpers/ChangeBackground";
+import { fileSizeFormatter } from "../Helpers";
 import { aesCbc256 } from "../passphrase/Masking";
 import "./Dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const { passphrase, setPassphrase } = useContext(AuthContext);
+  const { globalPassphrase, setGlobalPassphrase } = useContext(AuthContext);
+  const [passphrase, setPassphrase] = useState(globalPassphrase);
   const [file, setFile] = useState("");
-  const [modal, setModal] = useState(passphrase ? false : true);
+  const [modal, setModal] = useState(false);
   const [fileList, setFileList] = useState([]);
 
   useEffect(() => {
     ChangeBackground("login");
-  }, [fileList]);
+    setPassphrase(globalPassphrase);
+    if (globalPassphrase === "" || globalPassphrase === null) setModal(true);
+    else {
+      fetchFileList();
+      setModal(false);
+    }
+    console.log(
+      "Passphrase",
+      passphrase,
+      "Global Passphrase",
+      globalPassphrase
+    );
+  }, [globalPassphrase]);
+
+  useEffect(() => {
+    console.log("In dashboard : ", modal);
+  }, [modal]);
 
   useEffect(() => {
     if (!localStorage.getItem("userName") && !localStorage.getItem("token")) {
@@ -36,6 +55,27 @@ function Dashboard() {
     }
   }, [navigate]);
 
+  function fetchFileList() {
+    const headers = {
+      "Content-Type": "application/json",
+      "x-access-token": localStorage.getItem("token"),
+    };
+    let email = aesCbc256(localStorage.getItem("email"));
+
+    axios
+      .post(
+        `${initObject.url}/filelist`,
+        {
+          email,
+          passphrase: aesCbc256(passphrase),
+        },
+        { headers }
+      )
+      .then((res) => {
+        setFileList(res.data.fileList);
+        console.log(res.data);
+      });
+  }
   const handleFileChange = (e) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
@@ -44,6 +84,7 @@ function Dashboard() {
 
   const handleUploadClick = () => {
     if (!file) {
+      toast.error("Choose a file to upload!");
       return;
     }
     let email = aesCbc256(localStorage.getItem("email"));
@@ -56,16 +97,30 @@ function Dashboard() {
       user: { userName, email },
       passphrase: aesCbc256(passphrase),
     };
-    console.log(metadata);
+
+    let newFile = {
+      filename: file.name,
+      size: fileSizeFormatter(file.size),
+      date: new Date().toISOString(),
+      encryptedFileName: "notgenerated",
+    };
+
+    setFileList([...fileList, newFile]);
+    console.log(fileList);
+    console.log(newFile);
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("metadata", JSON.stringify(metadata));
-    axios.post(`${initObject.url}/upload`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        "x-access-token": token,
-      },
-    });
+    axios
+      .post(`${initObject.url}/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "x-access-token": token,
+        },
+      })
+      .then((res) => {})
+      .catch((err) => {});
   };
 
   const handlePassphraseChange = (newValue) => {
@@ -89,25 +144,27 @@ function Dashboard() {
           }
         )
         .then((res) => {
-          if (res.data.status === "ok") {
-            alert("Good pp");
-            let email = aesCbc256(localStorage.getItem("email"));
+          toast.success(res.data.message);
+          setGlobalPassphrase(passphrase);
+          let email = aesCbc256(localStorage.getItem("email"));
 
-            axios
-              .post(
-                `${initObject.url}/filelist`,
-                {
-                  email,
-                  passphrase: aesCbc256(passphrase),
-                },
-                { headers }
-              )
-              .then((res) => {
-                setFileList(res.data.fileList);
-                console.log(res.data);
-              });
-            setModal(false);
-          } else alert("Bad pp, try again");
+          axios
+            .post(
+              `${initObject.url}/filelist`,
+              {
+                email,
+                passphrase: aesCbc256(passphrase),
+              },
+              { headers }
+            )
+            .then((res) => {
+              setFileList(res.data.fileList);
+              console.log(res.data);
+            });
+          setModal(false);
+        })
+        .catch((err) => {
+          toast.error(err.response.data.message);
         });
 
       //
@@ -134,9 +191,10 @@ function Dashboard() {
   };
   return (
     <div className="dashboard-container">
-      <Navbar setPassphrase={setPassphrase} />
+      <Navbar setGlobalPassphrase={setGlobalPassphrase} />
       <Passphrase
         value={passphrase}
+        toast={toast}
         onPassphraseChange={handlePassphraseChange}
         onSubmit={handleModalClose}
         onModalClose={handleModalClose}
@@ -155,7 +213,6 @@ function Dashboard() {
                 <>
                   <p className="upload-text-header">Name: {file.name}</p>
                   <p className="upload-text">Size: {file.type}</p>
-                  {/* {file && `${file.name} - ${file.type}`} */}
                 </>
               ) : (
                 <p className="upload-text-header">Choose a file to upload</p>

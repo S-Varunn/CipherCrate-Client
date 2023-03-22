@@ -5,6 +5,9 @@
     height: calc(100vh - 80px);
     overflow: hidden;
 }
+.dashboard-container{
+  height: 100vh;
+}
 input#file {
     display: inline-block;
     width: 100%;
@@ -62,7 +65,7 @@ input#file {
     width: 80%;
     overflow-y: scroll;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     align-content: flex-start;
   }
