@@ -43,15 +43,16 @@ function Navbar({ setPassphrase }) {
             </li>
           </ul>
         </div>
-        <div
-          className="logout-button-container"
-          onClick={() => {
-            handleLogout();
-          }}
-        >
+        <div className="logout-button-container">
           <div className="logout-div">
             <p className="logout-text">Logout</p>
-            <FontAwesomeIcon icon={faArrowRightFromBracket} />
+            <FontAwesomeIcon
+              className="cursor"
+              icon={faArrowRightFromBracket}
+              onClick={() => {
+                handleLogout();
+              }}
+            />
           </div>
         </div>
         <div className="ham-menu">

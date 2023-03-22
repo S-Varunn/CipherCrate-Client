@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { saveAs } from "file-saver";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { initObject } from "../../initVar";
@@ -20,30 +21,9 @@ function Dashboard() {
 
   useEffect(() => {
     ChangeBackground("login");
-  }, []);
+  }, [fileList]);
 
   useEffect(() => {
-    let fileList = [
-      {
-        fileName: "records.pdf",
-        date: "2023-03-04T10:22:21.042Z",
-        size: "1788704",
-        fileType: "pdf",
-      },
-      {
-        fileName: "nezuko-chan.pdf",
-        date: "2023-03-04T10:22:21.042Z",
-        size: "1788704",
-        fileType: "ppt",
-      },
-      {
-        fileName: "buta-san.pdf",
-        date: "2023-03-04T10:22:21.042Z",
-        size: "1788704",
-        fileType: "doc",
-      },
-    ];
-    setFileList(fileList);
     if (!localStorage.getItem("userName") && !localStorage.getItem("token")) {
       // console.log(
       //   "Todo: On first login or register the state is set but time lag makes this useEffect redirect back to login"
@@ -123,7 +103,7 @@ function Dashboard() {
                 { headers }
               )
               .then((res) => {
-                // setFileList(res.data);
+                setFileList(res.data.fileList);
                 console.log(res.data);
               });
             setModal(false);
@@ -134,8 +114,24 @@ function Dashboard() {
     }
   };
 
-  // console.log("Passphrase", passphrase);
-
+  const handleDownload = (fileName, originalFileName) => {
+    const pp = encodeURIComponent(aesCbc256(passphrase));
+    const em = encodeURIComponent(localStorage.getItem("email"));
+    const fn = encodeURIComponent(fileName);
+    axios
+      .get(
+        `${initObject.url}/download?email=${em}&passphrase=${pp}&fileName=${fn}`,
+        {
+          responseType: "blob",
+          "x-access-token": localStorage.getItem("token"),
+        }
+      )
+      .then((response) => {
+        let binaryData = [];
+        binaryData.push(response.data);
+        saveAs(new Blob(binaryData), originalFileName);
+      });
+  };
   return (
     <div className="dashboard-container">
       <Navbar setPassphrase={setPassphrase} />
@@ -151,17 +147,40 @@ function Dashboard() {
       <div className="main-container">
         <div className="upload-file">
           <div>
-            <input id="file" type="file" onChange={handleFileChange} />
-
-            <div>{file && `${file.name} - ${file.type}`}</div>
-
-            <button onClick={handleUploadClick}>Upload</button>
+            <div className="dashed-border">
+              <input id="file" type="file" onChange={handleFileChange} />
+            </div>
+            <div>
+              {file ? (
+                <>
+                  <p className="upload-text-header">Name: {file.name}</p>
+                  <p className="upload-text">Size: {file.type}</p>
+                  {/* {file && `${file.name} - ${file.type}`} */}
+                </>
+              ) : (
+                <p className="upload-text-header">Choose a file to upload</p>
+              )}
+            </div>
+            <button className="weird-button" onClick={handleUploadClick}>
+              Upload
+            </button>
           </div>
         </div>
         <div className="file-list-container">
-          {fileList.map((file) => {
-            return <Card key={file.fileName} file={file} />;
-          })}
+          <div className="options-container">
+            <div className="filter-sort"></div>
+          </div>
+          <div className="scrollable-file-list">
+            {fileList.map((file, index) => {
+              return (
+                <Card
+                  handleDownload={handleDownload}
+                  key={file.filename}
+                  file={file}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

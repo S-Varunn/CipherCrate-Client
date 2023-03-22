@@ -62,18 +62,19 @@
 }
 .logout-div{
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
-    
 }
 .logout-text {
     font-family: 'Lato', sans-serif;
     margin-right: 20px;
     margin-top: -3px;
     font-weight: 100;
-
+    cursor: default;
 }
-
+.cursor{
+    cursor: pointer;
+}
 @media (max-width: 1080px) {
     .nav-container{
         height: 3rem;
@@ -148,7 +149,7 @@
         display: flex;
         justify-content: space-around;
         flex-direction: column;
-        align-items: start;
+        align-items: flex-start;
       }
       .mobile-menu-link li {
         color: #272727;
