@@ -12,15 +12,13 @@ import "./Card.css";
 
 function Card({ file, handleDownload }) {
   const [cardType, setCardType] = useState({});
-  const fileSplits = file.filename.split(".");
-  const fileType = fileSplits[fileSplits.length - 1];
-  console.log(fileType);
+
   useEffect(() => {
     fileIconSelect();
   }, []);
   const fileIconSelect = () => {
-    if (fileType)
-      switch (fileType) {
+    if (file.type)
+      switch (file.type) {
         case "pdf":
           setCardType({
             color: "#ff3131",
@@ -95,7 +93,7 @@ function Card({ file, handleDownload }) {
         </div>
         <div className="info-element">
           <p className="file-attrib">Type:</p>
-          <p className="file-value">{fileType}</p>
+          <p className="file-value">{file.type}</p>
         </div>
       </div>
       <div className="download-icon-container">

@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { initObject } from "../../initVar";
 import Navbar from "../navbar/Navbar";
 import Passphrase from "../passphrase/Passphrase";
+import CheckBox from "./CheckBox";
 import Card from "./Card";
 import { ChangeBackground } from "../helpers/ChangeBackground";
 import { fileSizeFormatter } from "../Helpers";
@@ -21,6 +22,7 @@ function Dashboard() {
   const [file, setFile] = useState("");
   const [modal, setModal] = useState(false);
   const [fileList, setFileList] = useState([]);
+  const [filterTags, setFilterTags] = useState([]);
 
   useEffect(() => {
     ChangeBackground("login");
@@ -30,17 +32,11 @@ function Dashboard() {
       fetchFileList();
       setModal(false);
     }
-    console.log(
-      "Passphrase",
-      passphrase,
-      "Global Passphrase",
-      globalPassphrase
-    );
   }, [globalPassphrase]);
 
   useEffect(() => {
-    console.log("In dashboard : ", modal);
-  }, [modal]);
+    console.log("In dashboard : ", filterTags);
+  }, [filterTags]);
 
   useEffect(() => {
     if (!localStorage.getItem("userName") && !localStorage.getItem("token")) {
@@ -98,11 +94,15 @@ function Dashboard() {
       passphrase: aesCbc256(passphrase),
     };
 
+    const fileSplits = file.name.split(".");
+    const fileType = fileSplits[fileSplits.length - 1];
+
     let newFile = {
       filename: file.name,
       size: fileSizeFormatter(file.size),
       date: new Date().toISOString(),
       encryptedFileName: "notgenerated",
+      type: fileType,
     };
 
     setFileList([...fileList, newFile]);
@@ -189,6 +189,17 @@ function Dashboard() {
         saveAs(new Blob(binaryData), originalFileName);
       });
   };
+
+  const filterHandler = (event) => {
+    if (event.target.checked) {
+      setFilterTags([...filterTags, event.target.value]);
+    } else {
+      setFilterTags(
+        filterTags.filter((filterTag) => filterTag !== event.target.value)
+      );
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <Navbar setGlobalPassphrase={setGlobalPassphrase} />
@@ -225,18 +236,33 @@ function Dashboard() {
         </div>
         <div className="file-list-container">
           <div className="options-container">
-            <div className="filter-sort"></div>
+            <div className="filter-sort">
+              <div className="filter">
+                {fileList
+                  .map((item) => item.type)
+                  .filter((value, index, self) => self.indexOf(value) === index)
+                  .map((value) => {
+                    console.log(value);
+                    return (
+                      <CheckBox type={value} filterHandler={filterHandler} />
+                    );
+                  })}
+              </div>
+              <div className="sort"></div>
+            </div>
           </div>
           <div className="scrollable-file-list">
-            {fileList.map((file, index) => {
-              return (
-                <Card
-                  handleDownload={handleDownload}
-                  key={file.filename}
-                  file={file}
-                />
-              );
-            })}
+            {fileList
+              .filter((value) => filterTags.includes(value.type))
+              .map((file, index) => {
+                return (
+                  <Card
+                    handleDownload={handleDownload}
+                    key={file.filename}
+                    file={file}
+                  />
+                );
+              })}
           </div>
         </div>
       </div>
