@@ -1,11 +1,23 @@
 .file-card-container{
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 5fr 0.5fr;
     height: 100px;
-    width: 300px;
+    width: 400px;
     background-color: #272727;
     border-radius: 10px;
     margin: 10px;
     border-left: 4px solid rgba(47, 201, 226, 1);
+}
+.file-image-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 5px;
+}
+.mime-type-icon{
+    height: 50px;
+    width: 50px;
+    color: rgba(47, 201, 226, 1);
 }
 .file-list-container{
     padding: 10px;
@@ -31,4 +43,16 @@
     margin-left: 10px;
     font-size: small;
 
+}
+.download-icon-container{
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+.download-icon{
+    height: 20px;
+    width: 20px;
+    color: white;
+    cursor: pointer;
 }

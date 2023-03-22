@@ -23,10 +23,16 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localPassphrase, setLocalPassphrase] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(1);
   const { setPassphrase } = useContext(AuthContext);
 
   const images = [info_1, info_2, info_3, info_4];
+  const description = [
+    "Protect your files with ease, featuring secure storage and reliable encryption for ultimate peace of mind",
+    "Streamline your workflow and eliminate hassle with our user-friendly app, designed for effortless use and low maintenance",
+    "Fortify your data with our cutting-edge system, featuring top-of-the-line protection against hacking attempts and unbreakable encryption for unparalleled data confidentiality",
+    "Highly secure and 2FA enabled",
+  ];
 
   const [loadingAnimation, setLoadingAnimation] = useState(false);
   let navigate = useNavigate();
@@ -43,7 +49,6 @@ function Login() {
         setCurrentIndex(currentIndex + 1);
       }
     }, 5000);
-
     return () => clearInterval(intervalId);
   }, [currentIndex, images.length]);
 
@@ -169,7 +174,8 @@ function Login() {
                       setEmail("");
                       setPassword("");
                       setUserName("");
-                    }}>
+                    }}
+                  >
                     Create an account
                   </p>
                 </div>
@@ -210,7 +216,8 @@ function Login() {
                     onClick={(event) => {
                       event.preventDefault();
                       setModal(true);
-                    }}>
+                    }}
+                  >
                     Register
                   </button>
                 </form>
@@ -223,7 +230,8 @@ function Login() {
                       setEmail("");
                       setPassword("");
                       setUserName("");
-                    }}>
+                    }}
+                  >
                     Sign In
                   </p>
                 </div>
@@ -231,12 +239,11 @@ function Login() {
             )}
           </div>
           <div className="info-container">
-            <div className="image-container trans">
-              <img
-                className="image trans"
-                src={images[currentIndex]}
-                alt="info"
-              />
+            <div className="image-container ">
+              <div className="flex center">
+                <img className="image" src={images[currentIndex]} alt="info" />
+              </div>
+              <p className="info-text">{description[currentIndex]}</p>
             </div>
           </div>
         </div>
