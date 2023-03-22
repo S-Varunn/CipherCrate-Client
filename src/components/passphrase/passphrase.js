@@ -5,6 +5,7 @@ import "./Passphrase.css";
 
 function Passphrase({
   value,
+  toast,
   onPassphraseChange,
   onSubmit,
   onModalClose,
@@ -15,6 +16,7 @@ function Passphrase({
   function handleChange(event) {
     onPassphraseChange(event.target.value);
   }
+
   return (
     <div className={`modal-container ${modal ? "show" : "hide"}`}>
       <div className="passphrase-container">
@@ -27,8 +29,7 @@ function Passphrase({
             className="modal-close"
             onClick={() => {
               onModalClose();
-            }}
-          >
+            }}>
             <FontAwesomeIcon className="cross-button" icon={faClose} />
           </div>
           <div className="input-box">
@@ -36,17 +37,18 @@ function Passphrase({
               value={value}
               onChange={handleChange}
               type="text"
-              required="required"
-            ></input>
+              required="required"></input>
             <span>Passphrase</span>
           </div>
           <button
             className="submit-button"
             onClick={(event) => {
+              if (!value.length === 32) {
+                toast.error("Passphrase must be at least 32 characters");
+              }
               onSubmit(event);
             }}
-            type="submit"
-          >
+            type="submit">
             Submit
           </button>
         </div>

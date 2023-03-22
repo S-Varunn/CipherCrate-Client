@@ -8,12 +8,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "./Navbar.css";
 
-function Navbar({ setPassphrase }) {
+function Navbar({ setGlobalPassphrase }) {
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.clear();
-    setPassphrase(null);
+    setGlobalPassphrase("");
     navigate("/");
   };
   return (
@@ -58,8 +58,7 @@ function Navbar({ setPassphrase }) {
         <div className="ham-menu">
           <FontAwesomeIcon
             icon={faHamburger}
-            onClick={() => setShowMenu(!showMenu)}
-          ></FontAwesomeIcon>
+            onClick={() => setShowMenu(!showMenu)}></FontAwesomeIcon>
         </div>
       </div>
     </section>

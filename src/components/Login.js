@@ -3,9 +3,11 @@ import { useState } from "react";
 import { initObject } from "../initVar";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import toast, { Toaster } from "react-hot-toast";
 import Loading from "./helpers/Loading";
 import logo from "../assets/logo.png";
 import axios from "axios";
+import validator from "validator";
 import { aesCbc256 } from "./passphrase/Masking";
 import "./Login.css";
 import Passphrase from "./passphrase/Passphrase";
@@ -23,8 +25,9 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localPassphrase, setLocalPassphrase] = useState("");
+  const [loadingAnimation, setLoadingAnimation] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(1);
-  const { setPassphrase } = useContext(AuthContext);
+  const { setGlobalPassphrase } = useContext(AuthContext);
 
   const images = [info_1, info_2, info_3, info_4];
   const description = [
@@ -34,8 +37,11 @@ function Login() {
     "Highly secure and 2FA enabled",
   ];
 
-  const [loadingAnimation, setLoadingAnimation] = useState(false);
   let navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("In login : ", modal);
+  }, [modal]);
 
   useEffect(() => {
     ChangeBackground("login");
@@ -52,13 +58,37 @@ function Login() {
     return () => clearInterval(intervalId);
   }, [currentIndex, images.length]);
 
+  const validate = () => {
+    if (userName.length == 0 || email.length == 0 || password.length == 0) {
+      toast.error("Email or Password cannot be empty");
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      toast.error("Incorrect email format");
+      return false;
+    }
+    if (
+      !validator.isStrongPassword(password, {
+        minLength: 8,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+    ) {
+      toast.error(
+        "Passwords needs to be at least 8 characters and have 1 Uppercase, 1 Number and 1 Symbol"
+      );
+      return false;
+    }
+    return true;
+  };
   const handleRegistration = (event) => {
     event.preventDefault();
-    if (localPassphrase === "") {
-      alert("Passphrase is required!");
+
+    if (localPassphrase === "" || localPassphrase.length != 32) {
+      toast.error("Passphrase is required and needs to be 32 Characters long!");
       return;
     }
-    console.log("Confirm the passphrase later:", localPassphrase);
     const encodedUserName = aesCbc256(userName);
     const encodedPassphrase = aesCbc256(localPassphrase);
     const encodedPassword = aesCbc256(password);
@@ -76,14 +106,16 @@ function Login() {
     axios
       .post(`${initObject.url}/register`, body, { headers: headers })
       .then((res) => {
-        // console.log(res);
         localStorage.setItem("userName", userName);
         localStorage.setItem("email", email);
         localStorage.setItem("token", res.data.token);
-        setPassphrase(localPassphrase);
+        setGlobalPassphrase(localPassphrase);
+        setModal(false);
+        toast.success(res.data.message);
         navigate("/dashboard");
       })
       .catch((err) => {
+        toast.error(err.response.data.message);
         console.error(err);
       });
   };
@@ -105,14 +137,16 @@ function Login() {
     axios
       .post(`${initObject.url}/signup`, body, { headers: headers })
       .then((res) => {
-        localStorage.setItem("userName", res.data.userName);
+        localStorage.setItem("userName", userName);
         localStorage.setItem("email", email);
         localStorage.setItem("token", res.data.token);
+        toast.success("Successfully signed in!");
         setLoadingAnimation(false);
-        if (res.data.status === "ok") navigate("dashboard");
+        navigate("dashboard");
       })
       .catch((err) => {
-        console.error(err);
+        toast.error(err.response.data.message);
+        console.error(err.response);
       });
   };
   const handlePassphraseChange = (newValue) => {
@@ -126,6 +160,7 @@ function Login() {
     <div className="login-container">
       <Passphrase
         value={localPassphrase}
+        toast={toast}
         onPassphraseChange={handlePassphraseChange}
         onSubmit={handleRegistration}
         onModalClose={handleModalClose}
@@ -174,8 +209,7 @@ function Login() {
                       setEmail("");
                       setPassword("");
                       setUserName("");
-                    }}
-                  >
+                    }}>
                     Create an account
                   </p>
                 </div>
@@ -215,9 +249,8 @@ function Login() {
                     className="main_button"
                     onClick={(event) => {
                       event.preventDefault();
-                      setModal(true);
-                    }}
-                  >
+                      if (validate()) setModal(true);
+                    }}>
                     Register
                   </button>
                 </form>
@@ -230,8 +263,7 @@ function Login() {
                       setEmail("");
                       setPassword("");
                       setUserName("");
-                    }}
-                  >
+                    }}>
                     Sign In
                   </p>
                 </div>

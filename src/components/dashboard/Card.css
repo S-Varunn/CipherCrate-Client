@@ -56,3 +56,6 @@
     color: white;
     cursor: pointer;
 }
+.events-none{
+    pointer-events: none;
+}
