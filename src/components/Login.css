@@ -31,6 +31,9 @@
     border-radius: 10px;
     padding:5px;
   }
+  .image-carousel {
+  width: 360px;
+}
   .page-elements {
     margin: 10% 0 0;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
@@ -133,7 +136,7 @@
   
   .form p.message {
     color: #666666;
-    font-size: 14px;
+  font-size: 0.9em;
     margin-top: 15px;
   }
   
@@ -144,6 +147,9 @@
   
   .form p.message a:hover {
     text-decoration: underline;
+  }
+  .gZzsDe{
+    bottom: -10px!important;
   }
   
 @media (max-width: 778px) {

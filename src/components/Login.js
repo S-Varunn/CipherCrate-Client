@@ -11,10 +11,11 @@ import validator from "validator";
 import { aesCbc256 } from "./passphrase/Masking";
 import "./Login.css";
 import Passphrase from "./passphrase/Passphrase";
-import info_1 from "../assets/info_1.jpg";
-import info_2 from "../assets/info_2.jpg";
-import info_3 from "../assets/info_3.png";
-import info_4 from "../assets/info_4.webp";
+import info_0 from "../assets/info_1.jpg";
+import info_1 from "../assets/info_2.jpg";
+import info_2 from "../assets/info_3.png";
+import info_3 from "../assets/info_4.webp";
+import Carousel from "better-react-carousel";
 
 import { ChangeBackground } from "./helpers/ChangeBackground";
 
@@ -26,14 +27,12 @@ function Login() {
   const [password, setPassword] = useState("");
   const [localPassphrase, setLocalPassphrase] = useState("");
   const [loadingAnimation, setLoadingAnimation] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(1);
   const { setGlobalPassphrase } = useContext(AuthContext);
 
-  const images = [info_1, info_2, info_3, info_4];
   const description = [
     "Protect your files with ease, featuring secure storage and reliable encryption for ultimate peace of mind",
     "Streamline your workflow and eliminate hassle with our user-friendly app, designed for effortless use and low maintenance",
-    "Fortify your data with our cutting-edge system, featuring top-of-the-line protection against hacking attempts and unbreakable encryption for unparalleled data confidentiality",
+    "Fortify your data with our cutting-edge system, featuring unbreakable encryption for unparalleled data confidentiality",
     "Highly secure and 2FA enabled",
   ];
 
@@ -46,17 +45,6 @@ function Login() {
   useEffect(() => {
     ChangeBackground("login");
   }, []);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (currentIndex === images.length - 1) {
-        setCurrentIndex(0);
-      } else {
-        setCurrentIndex(currentIndex + 1);
-      }
-    }, 5000);
-    return () => clearInterval(intervalId);
-  }, [currentIndex, images.length]);
 
   const validate = () => {
     if (userName.length == 0 || email.length == 0 || password.length == 0) {
@@ -214,7 +202,7 @@ function Login() {
                   </p>
                 </div>
                 <div className="options">
-                  <p className="message">Forget password? </p>
+                  <p className="message">Forgot password? </p>
                   <p className="link">Click here to reset it</p>
                 </div>
               </div>
@@ -271,11 +259,43 @@ function Login() {
             )}
           </div>
           <div className="info-container">
-            <div className="image-container ">
-              <div className="flex center">
-                <img className="image" src={images[currentIndex]} alt="info" />
-              </div>
-              <p className="info-text">{description[currentIndex]}</p>
+            <div className="image-container">
+              <Carousel
+                cols={1}
+                rows={1}
+                gap={1}
+                autoplay={3000}
+                loop
+                showDots
+                hideArrow
+                dotColorActive="#2196F3"
+                maxLength={"100px"}
+                containerClassName="image-carousel">
+                <Carousel.Item>
+                  <div className="flex center">
+                    <img className="image" src={info_0} alt="info" />
+                  </div>
+                  <p className="info-text">{description[0]}</p>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <div className="flex center">
+                    <img className="image" src={info_1} alt="info" />
+                  </div>
+                  <p className="info-text">{description[1]}</p>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <div className="flex center">
+                    <img className="image" src={info_2} alt="info" />
+                  </div>
+                  <p className="info-text">{description[2]}</p>
+                </Carousel.Item>
+                <Carousel.Item>
+                  <div className="flex center">
+                    <img className="image" src={info_3} alt="info" />
+                  </div>
+                  <p className="info-text">{description[3]}</p>
+                </Carousel.Item>
+              </Carousel>
             </div>
           </div>
         </div>
