@@ -14,6 +14,7 @@ import Card from "./Card";
 import { ChangeBackground } from "../helpers/ChangeBackground";
 import { fileSizeFormatter } from "../Helpers";
 import { aesCbc256 } from "../passphrase/Masking";
+import noData from "../../assets/no-data.svg";
 import "./Dashboard.css";
 
 function Dashboard() {
@@ -82,7 +83,6 @@ function Dashboard() {
       )
       .then((res) => {
         setFileList(res.data.fileList);
-        console.log(res.data);
       });
   }
   const handleFileChange = (e) => {
@@ -91,7 +91,7 @@ function Dashboard() {
     }
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     if (!file) {
       toast.error("Choose a file to upload!");
       return;
@@ -117,27 +117,37 @@ function Dashboard() {
       encryptedFileName: "notgenerated",
       type: fileType,
     };
-    let currentFileList = [...fileList, newFile];
-    setFileList(currentFileList);
 
     const formData = new FormData();
     formData.append("file", file);
     formData.append("metadata", JSON.stringify(metadata));
-    const promise = axios
-      .post(`${initObject.url}/upload`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "x-access-token": token,
-        },
-      })
-      .then((res) => {
-        fetchFileList();
-      });
-    toast.promise(promise, {
-      loading: "Encrypting and uploading your file... Please wait...",
-      success: "File uploaded successfully!",
-      error: "Error when uploading file :(",
-    });
+    // const promise = await
+
+    // console.log(promise);
+
+    toast.promise(
+      axios
+        .post(`${initObject.url}/upload`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-access-token": token,
+          },
+        })
+        .then((res) => {
+          let currentFileList = [...fileList, newFile];
+          setFileList(currentFileList);
+          fetchFileList();
+          return { message: "File uploaded successfully!", success: true };
+        })
+        .then((data) => {
+          return { message: data.message, success: true };
+        }),
+      {
+        loading: "Encrypting and uploading your file... Please wait...",
+        success: "File has been successfully uploaded!",
+        error: (error) => `${error.response.data.message}`,
+      }
+    );
   };
 
   const handlePassphraseChange = (newValue) => {
@@ -264,7 +274,20 @@ function Dashboard() {
               <div className="filter-sort">
                 <div className="filter">
                   <p className="filter-header">Filter</p>
-                  <div className="filter-checkboxes">
+                  <div
+                    className={
+                      fileList.length !== 0
+                        ? "filter-empty display-none"
+                        : "filter-empty"
+                    }>
+                    <p className="error-text">No filters yet!</p>
+                  </div>
+                  <div
+                    className={
+                      fileList.length === 0
+                        ? "filter-checkboxes display-none"
+                        : "filter-checkboxes"
+                    }>
                     {fileList
                       .map((item) => item.type)
                       .filter(
@@ -283,8 +306,26 @@ function Dashboard() {
                 <div className="sort"></div>
               </div>
             </div>
-
-            <div className="scrollable-file-list">
+            <div
+              className={
+                fileList.length !== 0
+                  ? "file-not-found-container display-none"
+                  : "file-not-found-container"
+              }>
+              <div className="flex-center">
+                <img className="file-not-found" src={noData} />
+                <p className="error-text">
+                  Welcome {localStorage.getItem("userName")}! Get started by
+                  uploading a file ;)
+                </p>
+              </div>
+            </div>
+            <div
+              className={
+                fileList.length === 0
+                  ? "scrollable-file-list display-none"
+                  : "scrollable-file-list"
+              }>
               {(filterTags.length == 0 && keyword.length == 0
                 ? fileList
                 : filteredList

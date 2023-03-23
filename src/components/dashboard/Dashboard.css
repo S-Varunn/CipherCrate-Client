@@ -101,6 +101,10 @@ input#file {
   .filter-checkboxes{
     padding: 0px 10px 10px 10px;
   }
+
+  .display-none {
+    display: none!important;
+  }
   
   .weird-button {
     align-items: center;
@@ -149,6 +153,28 @@ input#file {
   .main-info-container{
     display: flex;
     flex-direction: column;
+  }
+  .file-not-found {
+        height: 400px;
+    width: 400px;
+  }
+  .file-not-found-container{
+        height: 100%;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+  }
+  .flex-center {
+    display: flex;
+    justify-content:center;
+    flex-direction: column;
+  }
+  .error-text {
+    text-align: center;
+    font-family: 'Shantell Sans', cursive;
+    font-size: 15px;
+    font-weight: 100;
+    padding: 12px;
   }
 
 @media (max-width: 1080px) {
