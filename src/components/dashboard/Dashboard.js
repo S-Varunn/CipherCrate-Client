@@ -9,6 +9,7 @@ import { initObject } from "../../initVar";
 import Navbar from "../navbar/Navbar";
 import Passphrase from "../passphrase/Passphrase";
 import CheckBox from "./CheckBox";
+import SearchBar from "./SearchBar";
 import Card from "./Card";
 import { ChangeBackground } from "../helpers/ChangeBackground";
 import { fileSizeFormatter } from "../Helpers";
@@ -23,6 +24,8 @@ function Dashboard() {
   const [modal, setModal] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [filterTags, setFilterTags] = useState([]);
+  const [filteredList, setFilteredList] = useState([]);
+  const [keyword, setKeyword] = useState("");
 
   useEffect(() => {
     ChangeBackground("login");
@@ -35,8 +38,14 @@ function Dashboard() {
   }, [globalPassphrase]);
 
   useEffect(() => {
-    console.log("In dashboard : ", filterTags);
-  }, [filterTags]);
+    let filtered = fileList.filter((list) => {
+      return `${list.filename.toLowerCase()}`.includes(keyword.toLowerCase());
+    });
+    if (filterTags.length > 0)
+      filtered = filtered.filter((value) => filterTags.includes(value.type));
+
+    setFilteredList(filtered);
+  }, [filterTags, keyword]);
 
   useEffect(() => {
     if (!localStorage.getItem("userName") && !localStorage.getItem("token")) {
@@ -50,6 +59,10 @@ function Dashboard() {
       navigate("/");
     }
   }, [navigate]);
+
+  const updateKeyword = (keyword) => {
+    setKeyword(keyword);
+  };
 
   function fetchFileList() {
     const headers = {
@@ -104,23 +117,27 @@ function Dashboard() {
       encryptedFileName: "notgenerated",
       type: fileType,
     };
-
-    setFileList([...fileList, newFile]);
-    console.log(fileList);
-    console.log(newFile);
+    let currentFileList = [...fileList, newFile];
+    setFileList(currentFileList);
 
     const formData = new FormData();
     formData.append("file", file);
     formData.append("metadata", JSON.stringify(metadata));
-    axios
+    const promise = axios
       .post(`${initObject.url}/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "x-access-token": token,
         },
       })
-      .then((res) => {})
-      .catch((err) => {});
+      .then((res) => {
+        fetchFileList();
+      });
+    toast.promise(promise, {
+      loading: "Encrypting and uploading your file... Please wait...",
+      success: "File uploaded successfully!",
+      error: "Error when uploading file :(",
+    });
   };
 
   const handlePassphraseChange = (newValue) => {
@@ -159,15 +176,12 @@ function Dashboard() {
             )
             .then((res) => {
               setFileList(res.data.fileList);
-              console.log(res.data);
             });
           setModal(false);
         })
         .catch((err) => {
           toast.error(err.response.data.message);
         });
-
-      //
     }
   };
 
@@ -175,7 +189,7 @@ function Dashboard() {
     const pp = encodeURIComponent(aesCbc256(passphrase));
     const em = encodeURIComponent(localStorage.getItem("email"));
     const fn = encodeURIComponent(fileName);
-    axios
+    const promise = axios
       .get(
         `${initObject.url}/download?email=${em}&passphrase=${pp}&fileName=${fn}`,
         {
@@ -188,6 +202,11 @@ function Dashboard() {
         binaryData.push(response.data);
         saveAs(new Blob(binaryData), originalFileName);
       });
+    toast.promise(promise, {
+      loading: "Initiating download! Please wait...",
+      success: "Download Successful!",
+      error: "Error when downloading file :(",
+    });
   };
 
   const filterHandler = (event) => {
@@ -199,6 +218,8 @@ function Dashboard() {
       );
     }
   };
+
+  // filteredList = fileList.filter((value) => filterTags.includes(value.type));
 
   return (
     <div className="dashboard-container">
@@ -234,27 +255,40 @@ function Dashboard() {
             </button>
           </div>
         </div>
-        <div className="file-list-container">
-          <div className="options-container">
-            <div className="filter-sort">
-              <div className="filter">
-                {fileList
-                  .map((item) => item.type)
-                  .filter((value, index, self) => self.indexOf(value) === index)
-                  .map((value) => {
-                    console.log(value);
-                    return (
-                      <CheckBox type={value} filterHandler={filterHandler} />
-                    );
-                  })}
-              </div>
-              <div className="sort"></div>
-            </div>
+        <div className="main-info-container">
+          <div className="search-bar-container">
+            <SearchBar keyword={keyword} onChange={updateKeyword} />
           </div>
-          <div className="scrollable-file-list">
-            {fileList
-              .filter((value) => filterTags.includes(value.type))
-              .map((file, index) => {
+          <div className="file-list-container">
+            <div className="options-container">
+              <div className="filter-sort">
+                <div className="filter">
+                  <p className="filter-header">Filter</p>
+                  <div className="filter-checkboxes">
+                    {fileList
+                      .map((item) => item.type)
+                      .filter(
+                        (value, index, self) => self.indexOf(value) === index
+                      )
+                      .map((value) => {
+                        return (
+                          <CheckBox
+                            type={value}
+                            filterHandler={filterHandler}
+                          />
+                        );
+                      })}
+                  </div>
+                </div>
+                <div className="sort"></div>
+              </div>
+            </div>
+
+            <div className="scrollable-file-list">
+              {(filterTags.length == 0 && keyword.length == 0
+                ? fileList
+                : filteredList
+              ).map((file, index) => {
                 return (
                   <Card
                     handleDownload={handleDownload}
@@ -263,6 +297,7 @@ function Dashboard() {
                   />
                 );
               })}
+            </div>
           </div>
         </div>
       </div>

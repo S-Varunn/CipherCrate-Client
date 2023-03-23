@@ -70,7 +70,8 @@ function Card({ file, handleDownload }) {
   return (
     <div
       className="file-card-container"
-      style={{ borderLeft: "4px solid " + cardType.color }}>
+      style={{ borderLeft: "4px solid " + cardType.color }}
+    >
       <div className="file-image-container">
         <FontAwesomeIcon
           className="mime-type-icon"
