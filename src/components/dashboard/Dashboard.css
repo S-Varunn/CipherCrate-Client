@@ -35,7 +35,6 @@ input#file {
     height: calc(100vh - 120px);
   }
   .file-list-container{
-    height: calc(100vh - 120px);
     overflow-x: hidden;
     padding: 10px;
     display: flex;
@@ -43,7 +42,15 @@ input#file {
     margin-left: 5px;
     border-radius: 10px;
     align-items: center;
+    height: calc(100vh - 172px);
   }
+  .search-bar-container {
+    background-color: white;
+    padding: 0px;
+    margin: 0px 0px 10px 8px;
+    border-radius: 10px;
+  }
+
   .options-container{
     width: 25%;
     height: 100%;
@@ -83,8 +90,16 @@ input#file {
   }
   .filter{
     width: 100%;
-    display: flex;
-    flex-direction: column;
+  }
+
+  .filter-header{
+    font-family: 'Shantell Sans', cursive;
+    font-size: large;
+    font-weight: bold;
+    padding: 12px;
+  }
+  .filter-checkboxes{
+    padding: 0px 10px 10px 10px;
   }
   
   .weird-button {
@@ -130,6 +145,10 @@ input#file {
     font-family: 'Shantell Sans', cursive;
     font-size: small;
     text-align: center;
+  }
+  .main-info-container{
+    display: flex;
+    flex-direction: column;
   }
 
 @media (max-width: 1080px) {

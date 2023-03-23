@@ -36,12 +36,13 @@
 }
 .file-value{
     font-family: 'Lato', sans-serif;
-    justify-content: center;
-    font-family: 'Lato', sans-serif;
-    display: flex;
-    flex-direction: column;
     margin-left: 10px;
     font-size: small;
+    width: 200px;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
 }
 .download-icon-container{

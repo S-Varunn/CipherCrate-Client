@@ -1,8 +1,11 @@
+import "./CheckBox.css";
 function CheckBox({ type, filterHandler }) {
   return (
-    <label htmlFor={type}>
+    <label class="container" htmlFor={type}>
+      {" "}
+      {type}
       <input type="checkbox" onChange={filterHandler} value={type} id={type} />
-      <span>{type}</span>
+      <span class="checkmark"></span>
     </label>
   );
 }
