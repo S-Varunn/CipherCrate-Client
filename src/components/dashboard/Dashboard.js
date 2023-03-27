@@ -268,6 +268,9 @@ function Dashboard() {
         <div className="main-info-container">
           <div className="search-bar-container">
             <SearchBar keyword={keyword} onChange={updateKeyword} />
+            <div className="welcome-text">
+              Welcome {localStorage.getItem("userName")} ! 👋🏻
+            </div>
           </div>
           <div className="file-list-container">
             <div className="options-container">

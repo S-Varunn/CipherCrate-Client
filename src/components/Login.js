@@ -125,7 +125,7 @@ function Login() {
     axios
       .post(`${initObject.url}/signup`, body, { headers: headers })
       .then((res) => {
-        localStorage.setItem("userName", userName);
+        localStorage.setItem("userName", res.data.userName);
         localStorage.setItem("email", email);
         localStorage.setItem("token", res.data.token);
         toast.success("Successfully signed in!");

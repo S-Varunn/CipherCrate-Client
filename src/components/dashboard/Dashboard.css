@@ -49,6 +49,16 @@ input#file {
     padding: 0px;
     margin: 0px 0px 10px 8px;
     border-radius: 10px;
+    display: flex;
+  }
+  .welcome-text {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 100px;
+    font-weight: 800;
+    font-family: 'Shantell Sans', cursive;
   }
 
   .options-container{

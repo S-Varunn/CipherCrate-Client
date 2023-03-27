@@ -67,11 +67,16 @@ function Card({ file, handleDownload }) {
           });
       }
   };
+
+  let date = new Date(file.date);
+  let year = date.getFullYear();
+  let month = date.getMonth() + 1;
+  let dt = date.getDate();
+
   return (
     <div
       className="file-card-container"
-      style={{ borderLeft: "4px solid " + cardType.color }}
-    >
+      style={{ borderLeft: "4px solid " + cardType.color }}>
       <div className="file-image-container">
         <FontAwesomeIcon
           className="mime-type-icon"
@@ -90,7 +95,9 @@ function Card({ file, handleDownload }) {
         </div>
         <div className="info-element">
           <p className="file-attrib">Uploaded At:</p>
-          <p className="file-value">{file.date}</p>
+          <p className="file-value">
+            {dt}-{month}-{year}
+          </p>
         </div>
         <div className="info-element">
           <p className="file-attrib">Type:</p>

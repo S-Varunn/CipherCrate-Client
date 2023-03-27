@@ -27,20 +27,20 @@ function Navbar({ setGlobalPassphrase }) {
         </div>
         <div className={showMenu ? "nav-menu mobile-menu-link" : "nav-menu"}>
           <ul>
-            <li key="home">
+            {/* <li key="home">
               <a href="#!">Home</a>
             </li>
             <li key="about">
               <a href="#!">About</a>
-            </li>
+            </li> */}
 
-            <li key="portfolio">
+            {/* <li key="portfolio">
               <a href="#!">Portfolio</a>
-            </li>
-
+            </li> */}
+            {/* 
             <li key="contact">
               <a href="#!">Contact</a>
-            </li>
+            </li> */}
           </ul>
         </div>
         <div className="logout-button-container">
